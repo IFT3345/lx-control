@@ -1,120 +1,79 @@
 <p align="center">
-<a href="https://duckietown.com"><img src="/assets/images/dtlogo.png" alt="Duckietown Logo" width="50%"></a>
+<a href="https://duckietown.com"><img src="./assets/images/dtlogo.png" alt="Duckietown Logo" width="50%"></a>
 </p>
 
-# **Learning Experience (LX): Control**
+# **Labo 3 : Contrôle**
 
-# About these activities
+# Introduction
 
-In this learning experience, you will use the model that we built in the 
-[kinematics and modeling](https://github.com/duckietown/lx-kinematics-odometry)
-learning experience. Now we will build a simple controller to make the Duckiebot
-follow a specified set of actions based on our knowledge of how it moves. 
-
-This learning experience is provided by the Duckietown team and can be run on Duckiebots. Visit us at the 
-[Duckietown Website](https://www.duckietown.com) for more learning materials, documentation, and demos.
-
-For guided setup instructions, lecture content, and more related to this LX, see [our Self-Driving Cars with Duckietown MOOC on EdX](https://duckietown.com/mooc).
-
-# Instructions
-
-Find the most up-to-date instructions on [how to run LXs on the Duckietown manual](https://docs.duckietown.com/ente/duckietown-manual/60-learning-experiences/lx-setup-pid-control.html). 
-
-**NOTE:** All commands below are intended to be executed from the root directory of this exercise (i.e., the directory containing this README).
-
-**(If not already done) Clone this repository**
-
-The recommended way to use this repository is to make a fork and then clone that fork. 
-
-This can be done through the GitHub web interface. However, you are also free to simply clone this repository and get started. 
-
-**NOTE:** Example instructions to fork a repository and configure to pull from upstream can be found in the 
-[duckietown-lx repository README](https://github.com/duckietown/duckietown-lx/blob/mooc2022/README.md).
-
-This exercise can be run on a [real Duckiebot](https://get.duckietown.com/products/duckiebot-db21?variant=41543707099311) or on a virtual Duckiebot in [the Duckiematrix](https://docs.duckietown.com/ente/duckietown-manual/50-duckiematrix/introduction-to-the-duckiematrix-virtual-environment.html). 
-
-## 1. Make sure your LX is up-to-date
-
-Update your exercise definition and instructions,
-
-    git remote add upstream git@github.com:duckietown/lx-control
-    git pull upstream <your upstream branch>
+Dans cette laboratoire, vous utiliserez le modèle que nous avons construit dans l’expérience d’apprentissage sur la [cinématique et la modélisation](https://github.com/ift3345/lx-kinematics-odometry). Nous allons maintenant construire un contrôleur simple afin de faire suivre au Duckiebot un ensemble d’actions spécifiées, en nous appuyant sur notre connaissance de sa dynamique de mouvement.
 
 
+##  Mais d'abord...
 
-## 2. Make sure your system is up-to-date
+Assurez-vous que votre système est à jour.
 
-- 💻 This is an `ente` learning experience (note the branch name). Make sure your Duckietown Shell is set to an `ente` profile (and not, e.g., a `daffy` one). You can check your current distribution with
+- 💻 Veillez toujours à ce que votre  Duckietown Shell soit mise à jour vers la dernière version: `pipx upgrade duckietown-shell`
 
-    dts profile list
+- 💻 Mettre à jour les commandes du shell: `dts update`
 
-  To switch to an ente profile, follow the [Duckietown Manual DTS installation instructions](https://docs.duckietown.com/ente/duckietown-manual/10-setup/02-software/duckietown-shell-dts-installation.html#dt-account-switch-profile).
+- 💻 Assurez-vous que toutes les images Docker présentes sur votre ordinateur sont à jour: `dts desktop update`
 
-
-- 💻 Always make sure your Duckietown Shell is updated to the latest version. See [installation instructions](https://github.com/duckietown/duckietown-shell)
-
-- 💻 Update the shell commands: `dts update`
-
-- 💻 Update your laptop/desktop: `dts desktop update`
-
-- 🚙 Update your Duckiebot: `dts duckiebot update ROBOTNAME` (where `ROBOTNAME` is the name of your Duckiebot chosen during the initialization procedure.)
-(where `ROBOTNAME` is the name of your Duckiebot - real or virtual.)
-
-**Note**: if your virtual robot hangs indefinitely when you try to update it, you can try to restart it with:
+- 🚙 Assurez-vous que toutes les images Docker présentes sur votre ordinateur sont à jour: `dts duckiebot update ROBOTNAME`
+(où ROBOTNAME est le nom de votre Duckiebot — réel ou virtuel.)
 
 
-## 3. Work on the exercise
+# Avant de commencer
 
-### Launch the code editor
+Comme les moteurs DC et les robots ne sont pas tous identiques, un étalonnage est nécessaire. Commencez par effectuer une [procédure de calibration](https://docs.duckietown.com/ente/duckietown-manual/20-operations/04-calibrations/duckiebot-motor-odometry-calibration.html) afin que, lorsque vous commandez à votre robot d'aller tout droit, il se déplace effectivement en ligne droite.
 
-#### SSL certificate
+# Comment réaliser cet exercice de laboratoire ?
 
-If you have not done so already, set up your local SSL certificate needed to run the learning experience editor with:
+## Lancez l'éditeur de code.
 
-    sudo apt install libnss3-tools
-    dts setup mkcert
-
-
-Open the code editor by running the following command,
+Ouvrez l'éditeur de code (VSCode) en exécutant la commande suivante:
 
 ```
 dts code editor
 ```
 
-Wait for a URL to appear on the terminal, then click on it or copy-paste it in the address bar
-of your browser to access the code editor. The first thing you will see in the code editor is
-this same document, you can continue there.
+Attendez qu'une URL s'affiche dans le terminal, puis cliquez dessus ou copiez-la et collez-la dans la barre d'adresse de votre navigateur pour accéder à l'éditeur de code. Le premier élément que vous verrez dans l'éditeur de code est ce même document. 
 
-**NOTE**: if you are running Duckietown inside a devcontainer, make sure to [install the certificate for your host machine as well](https://docs.duckietown.com/ente/duckietown-manual/10-setup/setup-devcontainer.html#dts-code-run). 
+**Vous pouvez poursuivre votre travail à partir de là**
 
 
-### Walkthrough of notebooks
+## Les notebooks "Jupyter"
 
-**NOTE**: You should be reading this from inside the code editor in your browser.
+**REMARQUE** : Vous devez lire ce message depuis l'éditeur de code de votre navigateur.
 
-Inside the code editor, use the navigator sidebar on the left-hand side to navigate to the
-`notebooks` directory and open the first notebook.
+Dans l'éditeur de code, utilisez la barre latérale de navigation située à gauche pour accéder au
+dossier `notebooks` et ouvrir le premier notebook.
 
-Follow the instructions on the notebook and work through the notebooks in sequence.
+Suivez les instructions du notebook et parcourez les notebooks dans l'ordre.
 
+Une fois que vous avez terminé toutes les tâches des carnets de notes, vous pouvez suivre les instructions suivantes pour tester votre code.
 
-### Testing with the Duckiematrix
+## Exécution de votre code
 
-To test your code in the Duckiematrix you will need a virtual robot. You can create one with the command:
+### Tester avec le Duckiematrix (optionnel)
+
+Il peut être utile de tester votre code dans un environnement de simulation avant de l'essayer sur le robot réel. Pour cela, nous avons le Duckiematrix.
+
+Pour tester votre code dans Duckiematrix, vous aurez besoin d'un robot virtuel. Vous pouvez en créer un avec la commande suivante:
 
 ```
-dts duckiebot virtual create --type duckiebot --configuration DB21J [VBOT]
+dts duckiebot virtual create [VBOT]
 ```
 
-where `[VBOT]` is the hostname. It can be anything you like, with [some constraints](https://docs.duckietown.com/ente/duckietown-manual/10-setup/03-duckiebot/flashing-sd-card-duckiebot-initialization-complete.html). Make sure to remember your robot (host)name for later.
+où `[VBOT]` peut être n'importe quoi (mais n'oubliez pas ce nom pour la suite).
 
-Then you can start your virtual robot with the command:
+Vous pouvez ensuite démarrer votre robot virtuel avec la commande:
 
 ```
 dts duckiebot virtual start [VBOT]
 ```
 
-You should see it with a status `Booting` and finally `Ready` if you look at `dts fleet discover`: 
+Vous devriez le voir avec le statut « Booting » (démarrage) et enfin « Ready » (prêt) si vous consultez la commande `dts fleet discover` :
 
 ```
      | Hardware |   Type    | Model |  Status  | Hostname 
@@ -122,60 +81,54 @@ You should see it with a status `Booting` and finally `Ready` if you look at `dt
 [VBOT] |  virtual | duckiebot | DB21J |  Ready   | [VBOT].local
 ```
 
-Now that your virtual robot is ready, you can start the Duckiematrix. From this exercise directory do:
+Maintenant que votre robot virtuel est prêt, vous pouvez démarrer Duckiematrix. Depuis ce répertoire d'exercices, exécutez la commande suivante :
 
 ```
 dts code start_matrix
 ```
-You should see the Unity-based Duckiematrix simulator start up. The startup screen will look like:
 
-![duckiematrix_start](assets/images/control-lx-duckiematrix-start.png)
+Vous devriez voir le simulateur Duckiematrix, basé sur Unity, démarrer. L'écran de démarrage ressemblera à ceci :
 
-Your Duckiebot is at the start of a long straightaway.
+![duckiematrix_start](assets/duckiematrix_start.png)
 
-From here you can click anywhere on the window and click [ENTER] to make it become active. From here you can move the duckie towards the Duckiebot with the 'w', 'a', 's', and 'd' keys or you can move the camera angle to view the Duckiebot with the mouse. You can also mount your car with the 'E' key, which should look like
+À partir d'ici, vous pouvez cliquer n'importe où dans la fenêtre et appuyer sur la touche [ENTRÉE] pour l'activer. Vous pouvez ensuite déplacer le petit canard vers le Duckiebot à l'aide des touches « w », « a », « s » et « d », ou modifier l'angle de la caméra pour observer le Duckiebot avec la souris. Vous pouvez également passer à une vue de dessus en appuyant sur la touche « v », ce qui vous donnera une vue similaire à celle-ci :
 
-![duckiematrix_overhead](assets/images/control-lx-duckiematrix-riding.png)
-
-If you get very lost from the road and you want to come back, you can do so with the 'R' key. 
+![duckiematrix_overhead](assets/duckiematrix_overhead.png)
 
 
-### Building your code
+### "Build" votre code
 
-You can build your code with 
+Vous pouvez build le code avec
 
 ```
-dts code build -R ROBOT_NAME
+dts code build -R ROBOTNAME
 ```
 
-This will build a docker image with your code compiled inside - you should see your ROS node get built during the process. 
+où ROBOTNAME peut être un robot réel ou virtuel.
 
+### Tester le code
 
-
-
-### 💻 Testing 
-
-
-To test your code in the duckiematrix you can do:
+Vous pouvez ensuite exécuter votre code avec
 
 ```
-dts code workbench -m -R [VIRTUAL_ROBOT_NAME]
+dts code workbench -R ROBOTNAME [-m]
 ```
 
-and to test your code on your real Duckiebot you can do:
+où ROBOTNAME peut être un robot réel ou virtuel, mais s'il s'agit d'un robot virtuel, vous devez inclure l'option `-m` pour indiquer que vous souhaitez le tester dans Duckiematrix.
+
+
+
+Dans un autre terminal (sur l'ordinateur), vous pouvez lancer le visualiseur `noVNC` pour cet exercice, qui peut être utile pour envoyer des commandes au robot et visualiser l'odométrie que vous calculez dans la fenêtre RViZ.
 
 ```
-dts code workbench -R [ROBOT_NAME]
+dts code vnc -R [ROBOTNAME]
 ```
 
-
-In another terminal, you can launch the `noVNC` viewer for this exercise which can be useful to send commands to the robot and view the odometry that you calculating in the RViZ window. 
-
-```
-dts code vnc -R [ROBOT_NAME]
-```
-
-where `[ROBOT_NAME]` could be the real or the virtual robot (use whichever you ran the `dts code workbench` and `dts code build` command with).
+où `[ROBOTNAME]` peut être le robot réel ou virtuel (utilisez celui avec lequel vous avez exécuté la commande `dts code workbench`).
 
 
-Now you can proceed to the [first notebook](./notebooks/PID_heading_controller.ipynb).
+Vous pouvez maintenant passer au [premier cahier](./notebooks/PID_heading_controller.ipynb).
+
+Crédits
+
+Cet exercice a été initialement développé par Jacopo Tani chez Duckietown.
