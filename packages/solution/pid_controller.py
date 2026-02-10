@@ -43,8 +43,18 @@ class PIDController():
         # self.prev_e_heading the previous error. But note that you
         # should be the one to update them also.
 
+        e_p = theta_ref - theta_curr
+        e_i = self.prev_int_heading + e_p*delta_t
+        e_i = max(min(e_i, 2), -2)
+        if delta_t>0:
+            e_d = (e_p - self.prev_e_heading) / delta_t
+        else:
+            e_d = 0.0
+        omega = self.kp*e_p + self.ki*e_i + self.kd*e_d
+        self.prev_int_heading = e_i
+        self.prev_e_heading = e_p
         v = v_ref
-        omega = np.random.uniform(-8.0, 8.0)
+
         return v, omega
 
     def OffsetControl(self,
@@ -73,7 +83,16 @@ class PIDController():
         # self.prev_e_offset the previous error. But note that you
         # should be the one to update them also.
 
-        omega = np.random.uniform(-8.0, 8.0)
+        e_p = y_ref - y_curr
+        e_i = self.prev_int_offset + e_p*delta_t
+        e_i = max(min(e_i, 0.1), -0.1)
+        if delta_t > 0:
+            e_d = (e_p - self.prev_e_offset) / delta_t
+        else:
+            e_d = 0.0
+        omega = self.kp*e_p + self.ki*e_i + self.kd*e_d
+        self.prev_int_offset = e_i
+        self.prev_e_offset = e_p
         v = v_ref
         return v, omega
 
