@@ -6,18 +6,45 @@
 
 # Introduction
 
-Dans cette laboratoire, vous utiliserez le modèle que nous avons construit dans l’expérience d’apprentissage sur la [cinématique et la modélisation](https://github.com/ift3345/lx-kinematics-odometry). Nous allons maintenant construire un contrôleur simple afin de faire suivre au Duckiebot un ensemble d’actions spécifiées, en nous appuyant sur notre connaissance de sa dynamique de mouvement.
+Dans cette laboratoire, vous utiliserez le modèle que nous avons construit dans le laboroire précédent sur la [cinématique et la modélisation](https://github.com/ift3345/lx-kinematics-odometry). Nous allons maintenant construire un contrôleur simple afin de faire suivre au Duckiebot un ensemble d’actions spécifiées, en nous appuyant sur notre connaissance de sa dynamique de mouvement.
 
 
 ##  Mais d'abord...
 
 Assurez-vous que votre système est à jour.
 
-- 💻 Veillez toujours à ce que votre  Duckietown Shell soit mise à jour vers la dernière version: `pipx upgrade duckietown-shell`
+- 💻 Veillez toujours à ce que votre  Duckietown Shell soit mise à jour vers la dernière version: 
 
-- 💻 Mettre à jour les commandes du shell: `dts update`
+```
+     pipx upgrade duckietown-shell
+```
 
-- 💻 Assurez-vous que toutes les images Docker présentes sur votre ordinateur sont à jour: `dts desktop update`
+- 💻 Mettre à jour les commandes du shell: 
+
+```
+     dts update
+```
+
+- 💻 Assurez-vous que toutes les images Docker présentes sur votre ordinateur sont à jour: 
+
+```
+     dts desktop update
+```
+
+- 💻 Arrêtez et supprimez tous les conteneurs Docker existants (que l'autre groupe aurait pu laisser par erreur):
+
+
+```
+     docker stop $(docker ps -aq)
+     docker rm $(docker ps -aq)
+```     
+
+- 💻 Vous devrez peut-être également supprimer ce répertoire temporaire pour avoir les autorisations nécessaires pour y écrire.
+
+```
+     sudo rm /tmp/duckiematrix
+```
+   
 
 - 🚙 Assurez-vous que toutes les images Docker présentes sur votre ordinateur sont à jour: `dts duckiebot update ROBOTNAME`
 (où ROBOTNAME est le nom de votre Duckiebot — réel ou virtuel.)
@@ -25,7 +52,7 @@ Assurez-vous que votre système est à jour.
 
 # Avant de commencer
 
-Comme les moteurs DC et les robots ne sont pas tous identiques, un étalonnage est nécessaire. Commencez par effectuer une [procédure de calibration](https://docs.duckietown.com/ente/duckietown-manual/20-operations/04-calibrations/duckiebot-motor-odometry-calibration.html) afin que, lorsque vous commandez à votre robot d'aller tout droit, il se déplace effectivement en ligne droite.
+Comme les moteurs DC et les robots ne sont pas tous identiques, un calibation est nécessaire. Commencez par effectuer une [procédure de calibration](https://docs.duckietown.com/ente/duckietown-manual/20-operations/04-calibrations/duckiebot-motor-odometry-calibration.html) afin que, lorsque vous commandez à votre robot d'aller tout droit, il se déplace effectivement en ligne droite.
 
 # Comment réaliser cet exercice de laboratoire ?
 
@@ -51,18 +78,18 @@ dossier `notebooks` et ouvrir le premier notebook.
 
 Suivez les instructions du notebook et parcourez les notebooks dans l'ordre.
 
-Une fois que vous avez terminé toutes les tâches des carnets de notes, vous pouvez suivre les instructions suivantes pour tester votre code.
+Une fois que vous avez terminé toutes les tâches des notebooks, vous pouvez suivre les instructions suivantes pour tester votre code.
 
 ## Exécution de votre code
 
-### Tester avec le Duckiematrix (optionnel)
+### Tester avec le Duckiematrix
 
 Il peut être utile de tester votre code dans un environnement de simulation avant de l'essayer sur le robot réel. Pour cela, nous avons le Duckiematrix.
 
 Pour tester votre code dans Duckiematrix, vous aurez besoin d'un robot virtuel. Vous pouvez en créer un avec la commande suivante:
 
 ```
-dts duckiebot virtual create [VBOT]
+dts duckiebot virtual create [VBOT] -t duckiebot -c DB21J
 ```
 
 où `[VBOT]` peut être n'importe quoi (mais n'oubliez pas ce nom pour la suite).
@@ -117,7 +144,6 @@ dts code workbench -R ROBOTNAME [-m]
 où ROBOTNAME peut être un robot réel ou virtuel, mais s'il s'agit d'un robot virtuel, vous devez inclure l'option `-m` pour indiquer que vous souhaitez le tester dans Duckiematrix.
 
 
-
 Dans un autre terminal (sur l'ordinateur), vous pouvez lancer le visualiseur `noVNC` pour cet exercice, qui peut être utile pour envoyer des commandes au robot et visualiser l'odométrie que vous calculez dans la fenêtre RViZ.
 
 ```
@@ -129,6 +155,6 @@ où `[ROBOTNAME]` peut être le robot réel ou virtuel (utilisez celui avec lequ
 
 Vous pouvez maintenant passer au [premier cahier](./notebooks/PID_heading_controller.ipynb).
 
-Crédits
+# Crédits
 
 Cet exercice a été initialement développé par Jacopo Tani chez Duckietown.
