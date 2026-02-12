@@ -6,7 +6,7 @@
 
 # Introduction
 
-Dans cette laboratoire, vous utiliserez le modèle que nous avons construit dans le laboroire précédent sur la [cinématique et la modélisation](https://github.com/ift3345/lx-kinematics-odometry). Nous allons maintenant construire un contrôleur simple afin de faire suivre au Duckiebot un ensemble d’actions spécifiées, en nous appuyant sur notre connaissance de sa dynamique de mouvement.
+Dans ce laboratoire, vous utiliserez le modèle que nous avons construit dans le laboroire précédent sur la [cinématique et la modélisation](https://github.com/ift3345/lx-kinematics-odometry). Nous allons maintenant construire un contrôleur simple afin de faire suivre au Duckiebot un ensemble d’actions spécifiées, en nous appuyant sur notre connaissance de sa dynamique de mouvement.
 
 
 ##  Mais d'abord...
@@ -116,11 +116,11 @@ dts code start_matrix
 
 Vous devriez voir le simulateur Duckiematrix, basé sur Unity, démarrer. L'écran de démarrage ressemblera à ceci :
 
-![duckiematrix_start](assets/duckiematrix_start.png)
+![duckiematrix_start](assets/images/control-lx-duckiematrix-start.png)
 
-À partir d'ici, vous pouvez cliquer n'importe où dans la fenêtre et appuyer sur la touche [ENTRÉE] pour l'activer. Vous pouvez ensuite déplacer le petit canard vers le Duckiebot à l'aide des touches « w », « a », « s » et « d », ou modifier l'angle de la caméra pour observer le Duckiebot avec la souris. Vous pouvez également passer à une vue de dessus en appuyant sur la touche « v », ce qui vous donnera une vue similaire à celle-ci :
+À partir d'ici, vous pouvez cliquer n'importe où dans la fenêtre et appuyer sur la touche [ENTRÉE] pour l'activer. Vous pouvez ensuite déplacer le petit canard vers le Duckiebot à l'aide des touches « w », « a », « s » et « d », ou modifier l'angle de la caméra pour observer le Duckiebot avec la souris. Vous pouvez également monter sur le véhicule en appuyant sur la touche « e », ce qui vous donnera une vue similaire à celle-ci:
 
-![duckiematrix_overhead](assets/duckiematrix_overhead.png)
+![duckiematrix_riding](assets/images/control-lx-duckiematrix-riding.png)
 
 
 ### "Build" votre code
